@@ -1,0 +1,46 @@
+    /**
+     * 公私钥加解密
+     */
+    public function generatePubPri()
+    {
+        $private_key = '-----BEGIN RSA PRIVATE KEY-----
+MIICXgIBAAKBgQDS+Voc31+IBpaIWHvMyk6lshZ6x7FwqodZIPj1sUHmEVzqtlSF
+30qcs1qfvaBHyOyZAkbP9wf9YQ0nDHoTGXhmOFBLaZDh3fzjvWx5XNuk7MVHFLVY
+8IOoKxsDpIPIzEYwjLWWcZP1W0ZQaMnifDaYxiY+XOrCQiQIjKystizjiwIDAQAB
+AoGBAMbom4JPQ8V+2JwyOH6LWv0z26fk8LGVxchNowwaFFRymFUelLAnJzR4kP+8
+jApCMHfOQq8+bAUDZKAlTk8Fm5Glo2zTSVBzKb87Y6yyqe0HGlw+E7eSJ0a6URTI
+yrGpR6Vz/6cSVXQ5CEPvQgQYSHVg+1nmCD1Tp8e6elhcu53BAkEA9hYedDgP+mR6
+AxclJ4Q7Qel+d/Tg3kU01xHC3l5KoNSCgbcyx5pR9SnvXQuqQxjiM3FVLLO2ryaJ
+hMlvJ1I76wJBANt5HsxhC4r7MjFYXZD495pL/Ix+jaH2KFB8fEyF1/nx3YZTds83
+MMPBjKEj9Ph1z1wPVMNf1kXxr8teXeHmLuECQEQWiKSVYm5gYJX8UG5nmtG43iIo
+ohM9yMn9AxLtue5X/igP3T/3Bdg0myL+eESKXQPoxq1QqCo8Gm6gIV4a1bMCQQDG
+5dh8fkJYvNe7EosRNCAorE5/AL3Ylt3oOzjmnLGjqYcKEh/tIOZHseOBsbVzakj2
+9EnsGbF1h9e6JZZNgC7hAkEAx2diJPh/eWnTWLiW0DalkJvm/FK1K707JIBHCQfM
+UEvk4hMi78GaD3ZzuZ/5fMKL14jiL1GJFfeap2WwBdxOrg==
+-----END RSA PRIVATE KEY-----';
+        $public_key = '-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDS+Voc31+IBpaIWHvMyk6lshZ6
+x7FwqodZIPj1sUHmEVzqtlSF30qcs1qfvaBHyOyZAkbP9wf9YQ0nDHoTGXhmOFBL
+aZDh3fzjvWx5XNuk7MVHFLVY8IOoKxsDpIPIzEYwjLWWcZP1W0ZQaMnifDaYxiY+
+XOrCQiQIjKystizjiwIDAQAB
+-----END PUBLIC KEY-----';
+
+        //公私钥是不是可用
+        $is_private_key = openssl_pkey_get_private($private_key);
+        $is_public_key = openssl_pkey_get_public($public_key);
+
+        $data = '1234567890';
+        //私钥加密 公钥解密
+        openssl_private_encrypt($data,$private_encrypt_data,$private_key);
+        $encode_private_data = base64_encode($private_encrypt_data);
+        $decode_private_data = base64_decode($encode_private_data);
+        openssl_public_decrypt($decode_private_data,$public_decrypt_data,$public_key);
+        dump($public_decrypt_data);
+
+        //公钥加密 私钥解密
+        openssl_public_encrypt($data,$public_encrypt_data,$public_key);
+        $encode_public_data = base64_encode($public_encrypt_data);
+        $decode_public_data = base64_decode($encode_public_data);
+        openssl_private_decrypt($decode_public_data,$private_decrypt_data,$private_key);
+        dump($private_decrypt_data);
+    }
