@@ -1,0 +1,43 @@
+    /**
+     * 获取签名
+     * @author wzs
+     * @param array $params
+     * @param string $key
+     * @return string
+     */
+    public static function getSign(array $params,string $key)
+    {
+        $unSignParaString = self::formatQueryParaMap($params, false);
+        $signStr = strtoupper(md5($unSignParaString . "&key=" . $key));
+
+        return $signStr;
+    }
+
+    /**
+     * 格式化参数
+     * @author wzs
+     * @param array $paraMap
+     * @param bool $urlEncode
+     * @return bool|string
+     */
+    protected static function formatQueryParaMap(array $paraMap,  $urlEncode = false)
+    {
+        $buff = "";
+        ksort($paraMap);
+        foreach ($paraMap as $k => $v) {
+            if (null != $v && "null" != $v) {
+                if ($urlEncode) {
+                    $v = urlencode($v);
+                }
+
+                $buff .= $k . "=" . $v . "&";
+            }
+        }
+
+        $reqPar = '';
+        if (strlen($buff) > 0) {
+            $reqPar = substr($buff, 0, strlen($buff) - 1);
+        }
+
+        return $reqPar;
+    }
